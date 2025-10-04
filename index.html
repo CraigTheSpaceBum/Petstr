@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +39,9 @@
       const [showSettings, setShowSettings] = React.useState(false);
       const [showInventory, setShowInventory] = React.useState(false);
       const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
+      const [torontoTime, setTorontoTime] = React.useState('');
 
+      // Update pets from storage
       React.useEffect(() => {
         if (pubkey) {
           const data = localStorage.getItem(`pets:${pubkey}`);
@@ -48,6 +51,22 @@
       React.useEffect(() => {
         if (pubkey) localStorage.setItem(`pets:${pubkey}`, JSON.stringify(pets));
       }, [pets, pubkey]);
+
+      // Toronto time updater
+      React.useEffect(() => {
+        const updateTime = () => {
+          const now = new Date().toLocaleTimeString("en-CA", {
+            timeZone: "America/Toronto",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+          });
+          setTorontoTime(now);
+        };
+        updateTime();
+        const interval = setInterval(updateTime, 1000);
+        return () => clearInterval(interval);
+      }, []);
 
       const testLogin = () => {
         setPubkey('test_pubkey_0000');
@@ -155,20 +174,8 @@
           )}
 
           <nav style={{ flexGrow: 1 }}>
-            <button type="button" onClick={() => setActiveNav('Home')}
-              style={{
-                width: '100%', margin: '5px 0',
-                background: activeNav === 'Home' ? '#2563eb' : '#3b82f6',
-                border: 'none', color: 'white', padding: '8px'
-              }}>
-              Home
-            </button>
-            <button type="button" onClick={() => setShowInventory(true)}
-              style={{ width: '100%', margin: '5px 0', background: '#10b981', border: 'none', color: 'white', padding: '8px' }}>
-              Inventory
-            </button>
-            {['Games', 'Social'].map(nav => (
-              <button type="button" key={nav} onClick={() => setActiveNav(nav)}
+            {['Home', 'Games', 'Social'].map(nav => (
+              <button type="button" key={nav} onClick={() => { setActiveNav(nav); setShowInventory(false); setShowPetCreation(false); setShowSettings(false); }}
                 style={{
                   width: '100%', margin: '5px 0',
                   background: activeNav === nav ? '#2563eb' : '#3b82f6',
@@ -177,7 +184,19 @@
                 {nav}
               </button>
             ))}
+            <button type="button" onClick={() => { setShowInventory(true); setShowPetCreation(false); setShowSettings(false); }}
+              style={{ width: '100%', margin: '5px 0', background: '#10b981', border: 'none', color: 'white', padding: '8px' }}>
+              Inventory
+            </button>
           </nav>
+
+          {/* Toronto Time */}
+          {!sidebarCollapsed && (
+            <div style={{ textAlign: 'center', margin: '10px 0', fontSize: '10px' }}>
+              <span>Toronto Time</span><br />
+              <span>{torontoTime}</span>
+            </div>
+          )}
 
           <div style={{ marginTop: 'auto' }}>
             <button type="button" onClick={() => setShowPetCreation(true)}
@@ -246,11 +265,13 @@
 
       const MainContent = () => {
         if (showPetCreation) return <PetCreationForm onCreate={createPet} />;
-        if (showSettings) return <div style={{ transition: 'opacity 0.5s' }}><h2>Settings - Coming Soon!</h2></div>;
-        if (showInventory) return <div style={{ transition: 'opacity 0.5s' }}><h2>Inventory - Coming Soon!</h2></div>;
+        if (showSettings) return <div><h2>Settings - Coming Soon!</h2></div>;
+        if (showInventory) return <div><h2>Inventory - Coming Soon!</h2></div>;
+        if (activeNav === 'Games') return <div><h2>Games - Coming Soon!</h2></div>;
+        if (activeNav === 'Social') return <div><h2>Social - Coming Soon!</h2></div>;
 
         return activePet ? (
-          <div style={{ transition: 'opacity 0.5s' }}>
+          <div>
             <h2>{activePet.name}</h2>
             <img src={PET_SPECIES[activePet.species][activePet.stage - 1]} alt={activePet.species}
               style={{ width: '150px', imageRendering: 'pixelated' }} />
@@ -268,7 +289,7 @@
               </button>
             }
           </div>
-        ) : <p style={{ transition: 'opacity 0.5s' }}>No active pet selected.</p>;
+        ) : <p>No active pet selected.</p>;
       };
 
       return (
@@ -302,3 +323,4 @@
   </script>
 </body>
 </html>
+```
