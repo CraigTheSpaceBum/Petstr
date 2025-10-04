@@ -29,6 +29,7 @@
     const hungerDecayRate = 1;
 
     function TamagotchiApp() {
+      const [graveyard, setGraveyard] = React.useState([]);
       const [pubkey, setPubkey] = React.useState(null);
       const [profile, setProfile] = React.useState({ name: '', npub: '', picture: '' });
       const [pets, setPets] = React.useState([]);
@@ -66,20 +67,43 @@
         setPets([]);
         setActivePetIndex(0);
       };
-      const createPet = (name, species, gender) => {
-        setPets([...pets, {
-          name,
-          species,
-          gender,
-          createdAt: Date.now(),
-          lastUpdated: Date.now(),
-          hunger: 100,
-          health: 100,
-          stage: 1,
-          dead: false
-        }]);
-        setShowPetCreation(false);
-      };
+      
+      
+const createPet = (name, species, gender) => {
+  // Separate dead pets and alive pets
+  const deadPets = pets.filter(p => p.dead);
+  const alivePets = pets.filter(p => !p.dead);
+
+  // Move dead pets into graveyard (keep existing + new dead ones)
+  if (deadPets.length > 0) {
+    setGraveyard(prev => [...prev, ...deadPets.map(p => ({
+      ...p,
+      diedAt: Date.now()
+    }))]);
+  }
+
+  // Create new pet
+  const newPet = {
+    name,
+    species,
+    gender,
+    createdAt: Date.now(),
+    lastUpdated: Date.now(),
+    hunger: 100,
+    health: 100,
+    stage: 1,
+    dead: false
+  };
+
+  setPets([...alivePets, newPet]);
+  setActivePetIndex(0);
+  setShowPetCreation(false);
+};
+
+
+
+
+
       const feedPet = (index) => {
         setPets(prev => {
           const petsCopy = [...prev];
@@ -118,24 +142,39 @@
           position: 'relative'
         }}>
           {activePet && !sidebarCollapsed && (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              background: '#14326b',
-              padding: '5px',
-              borderRadius: '12px',
-              marginBottom: '20px',
-              opacity: sidebarCollapsed ? 0 : 1,
-              transition: 'opacity 0.5s'
-            }}>
-              <img src={PET_SPECIES[activePet.species][activePet.stage - 1]} alt={activePet.species}
-                style={{ width: '60px', height: '60px', imageRendering: 'pixelated', marginRight: '10px' }} />
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontWeight: 'bold' }}>{activePet.name}</span>
-                <span>Health: {Math.round(activePet.health)}</span>
-                <span>Hunger: {Math.round(activePet.hunger)}</span>
-              </div>
-            </div>
+        <button 
+  type="button"
+  onClick={() => { 
+    setActiveNav('Home'); 
+    setShowInventory(false); 
+    setShowPetCreation(false); 
+    setShowSettings(false); 
+  }}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    background: '#14326b',
+    padding: '5px',
+    borderRadius: '12px',
+    marginBottom: '20px',
+    opacity: sidebarCollapsed ? 0 : 1,
+    transition: 'opacity 0.5s',
+    border: 'none',
+    width: '100%',
+    textAlign: 'left',
+    color: 'white',
+    cursor: 'pointer'
+  }}
+>
+  <img src={PET_SPECIES[activePet.species][activePet.stage - 1]} alt={activePet.species}
+    style={{ width: '60px', height: '60px', imageRendering: 'pixelated', marginRight: '10px' }} />
+  <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <span style={{ fontWeight: 'bold' }}>{activePet.name}</span>
+    <span>Health: {Math.round(activePet.health)}</span>
+    <span>Hunger: {Math.round(activePet.hunger)}</span>
+  </div>
+</button>
+
           )}
           {profile.name && !sidebarCollapsed && (
             <div style={{
@@ -174,20 +213,44 @@
             </button>
           </nav>
 
-          <div style={{ marginTop: 'auto' }}>
-            <button type="button" onClick={() => setShowPetCreation(true)}
-              style={{ width: '100%', margin: '5px 0', background: '#f59e0b', border: 'none', color: 'white', padding: '8px' }}>
-              Create Pet
-            </button>
-            <button type="button" onClick={() => setShowSettings(true)}
-              style={{ width: '100%', margin: '5px 0', background: '#6b21a8', border: 'none', color: 'white', padding: '8px' }}>
-              Settings
-            </button>
-            <button type="button" onClick={logout}
-              style={{ width: '100%', margin: '5px 0', background: '#ef4444', border: 'none', color: 'white', padding: '8px' }}>
-              Logout
-            </button>
-          </div>
+<div style={{ marginTop: 'auto' }}>
+  {(!activePet || activePet.dead) && (
+    <button type="button" onClick={() => setShowPetCreation(true)}
+      style={{ width: '100%', margin: '5px 0', background: '#f59e0b', border: 'none', color: 'white', padding: '8px' }}>
+      Create Pet
+    </button>
+  )}
+
+  <button 
+  type="button" 
+  onClick={() => { 
+    setShowInventory(false); 
+    setShowPetCreation(false); 
+    setShowSettings(false); 
+    setActiveNav('Graveyard'); 
+  }}
+  style={{ 
+    width: '100%', 
+    margin: '5px 0', 
+    background: '#6b7280', 
+    border: 'none', 
+    color: 'white', 
+    padding: '8px' 
+  }}
+>
+  Graveyard
+</button>
+
+  <button type="button" onClick={() => setShowSettings(true)}
+    style={{ width: '100%', margin: '5px 0', background: '#6b21a8', border: 'none', color: 'white', padding: '8px' }}>
+    Settings
+  </button>
+  <button type="button" onClick={logout}
+    style={{ width: '100%', margin: '5px 0', background: '#ef4444', border: 'none', color: 'white', padding: '8px' }}>
+    Logout
+  </button>
+</div>
+
 
           <button type="button" aria-label="Collapse sidebar"
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -210,34 +273,60 @@
         </div>
       );
 
-      const PetCreationForm = ({ onCreate }) => {
-        const [name, setName] = React.useState('');
-        const [species, setSpecies] = React.useState('Dog');
-        const [gender, setGender] = React.useState('Male');
-        return (
-          <div style={{ textAlign: 'center', marginTop: '20px', transition: 'opacity 0.5s' }}>
-            <h2>Create New Pet</h2>
-            <input value={name} onChange={e => setName(e.target.value)} placeholder="Name"
-              style={{ width: '200px', marginBottom: '10px' }} />
-            <br />
-            <select value={species} onChange={e => setSpecies(e.target.value)}
-              style={{ width: '200px', marginBottom: '10px' }}>
-              {Object.keys(PET_SPECIES).map(s => <option key={s}>{s}</option>)}
-            </select>
-            <br />
-            <select value={gender} onChange={e => setGender(e.target.value)}
-              style={{ width: '200px', marginBottom: '10px' }}>
-              <option>Male</option>
-              <option>Female</option>
-            </select>
-            <br />
-            <button type="button" onClick={() => onCreate(name, species, gender)}
-              style={{ background: '#3b82f6', color: 'white', padding: '5px', width: '200px' }}>
-              Create Pet
-            </button>
-          </div>
-        );
-      };
+const PetCreationForm = ({ onCreate }) => {
+  const [name, setName] = React.useState('');
+  const [species, setSpecies] = React.useState('Dog');
+  const [gender, setGender] = React.useState('Male');
+
+  return (
+    <div style={{ textAlign: 'center', marginTop: '20px', transition: 'opacity 0.5s' }}>
+      <h2>Create New Pet</h2>
+      <input 
+        value={name} 
+        onChange={e => setName(e.target.value)} 
+        placeholder="Name"
+        style={{ width: '200px', marginBottom: '10px' }} 
+      />
+      <br />
+
+      <select 
+        value={species} 
+        onChange={e => setSpecies(e.target.value)}
+        style={{ width: '200px', marginBottom: '10px' }}
+      >
+        {Object.keys(PET_SPECIES).map(s => <option key={s}>{s}</option>)}
+      </select>
+
+      {/* NEW: live image preview */}
+      <br />
+      <img 
+        src={PET_SPECIES[species][0]} 
+        alt={species} 
+        style={{ width: '100px', imageRendering: 'pixelated', marginBottom: '10px' }} 
+      />
+      <br />
+
+      <select 
+        value={gender} 
+        onChange={e => setGender(e.target.value)}
+        style={{ width: '200px', marginBottom: '10px' }}
+      >
+        <option>Male</option>
+        <option>Female</option>
+      </select>
+      <br />
+
+      <button 
+        type="button" 
+        onClick={() => onCreate(name, species, gender)}
+        style={{ background: '#3b82f6', color: 'white', padding: '5px', width: '200px' }}
+      >
+        Create Pet
+      </button>
+    </div>
+  );
+};
+
 
       const [showGames, setShowGames] = React.useState(false);
 const [showSocial, setShowSocial] = React.useState(false);
@@ -251,6 +340,38 @@ const MainContent = () => {
   if (showPetCreation) return <PetCreationForm onCreate={createPet} />;
   if (showSettings) return <div><h2>Settings - Coming Soon!</h2></div>;
   if (showInventory) return <div><h2>Inventory - Coming Soon!</h2></div>;
+
+  if (activeNav === 'Graveyard') {
+    return (
+      <div>
+        <h2>Pet Graveyard</h2>
+        {graveyard.length === 0 ? (
+          <p>No pets have died yet.</p>
+        ) : (
+          graveyard.map((pet, i) => {
+            const lifespanMs = (pet.diedAt - pet.createdAt);
+            const days = Math.floor(lifespanMs / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((lifespanMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((lifespanMs % (1000 * 60 * 60)) / (1000 * 60));
+
+            return (
+              <div key={i} style={{ marginBottom: '20px', textAlign: 'center' }}>
+                <img 
+                  src={PET_SPECIES[pet.species][Math.max(0, pet.stage - 1)]} 
+                  alt={pet.species} 
+                  style={{ width: '100px', imageRendering: 'pixelated' }}
+                />
+                <h3>{pet.name}</h3>
+                <p>Species: {pet.species}</p>
+                <p>Lifespan: {days}d {hours}h {minutes}m</p>
+              </div>
+            );
+          })
+        )}
+      </div>
+    );
+  }
+
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
