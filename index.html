@@ -23,10 +23,13 @@
   <div id="root"></div>
   <script type="text/babel">
     const PET_SPECIES = {
-      Dog: ['Monsters/003.png'],
+     Dog: ['Monsters/003.png'],
      Cat: ['Monsters/002.png'],
      Bird: ['Monsters/001.png'],
      Rat: ['Monsters/004.png'],
+     Corn: ['Monsters/005.png'],
+     Bug: ['Monsters/006.png'],
+     Lizard: ['Monsters/007.png'],
     };
 
     const hungerDecayRate = 1;
@@ -149,11 +152,11 @@ const euthanizePet = (index) => {
         return pet;
       };
       const activePet = pets[activePetIndex] ? updatePetStatus({ ...pets[activePetIndex] }) : null;
-
+// SideBar Color
       const Sidebar = () => (
         <div style={{
           width: sidebarCollapsed ? '50px' : '250px',
-          background: '#1e3a8a',
+          background: '#1f1f1f',
           color: 'white',
           display: 'flex',
           flexDirection: 'column',
@@ -162,6 +165,19 @@ const euthanizePet = (index) => {
           transition: 'width 0.3s ease-in-out',
           position: 'relative'
         }}>
+
+{!sidebarCollapsed && (
+  <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+    <img 
+      src="assets/logo.png" 
+      alt="Pets Transmitted by Relays" 
+      style={{ width: '100%', maxWidth: '200px', imageRendering: 'pixelated' }}
+    />
+  </div>
+)}
+
+
+
           {activePet && !sidebarCollapsed && (
         <button 
   type="button"
@@ -174,7 +190,7 @@ const euthanizePet = (index) => {
   style={{
     display: 'flex',
     alignItems: 'center',
-    background: '#14326b',
+    background: '#2a2a2a',
     padding: '5px',
     borderRadius: '12px',
     marginBottom: '20px',
@@ -197,39 +213,52 @@ const euthanizePet = (index) => {
 </button>
 
           )}
-          {profile.name && !sidebarCollapsed && (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '20px',
-              background: '#14326b',
-              padding: '5px',
-              borderRadius: '12px',
-              opacity: sidebarCollapsed ? 0 : 1,
-              transition: 'opacity 0.5s'
-            }}>
-              <img src={profile.picture} alt="profile"
-                style={{ width: '60px', height: '60px', imageRendering: 'pixelated', marginRight: '10px' }} />
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <span>{profile.name}</span>
-                <small>{profile.npub}</small>
-              </div>
-            </div>
-          )}
+       {profile.name && !sidebarCollapsed && (
+  <button
+    type="button"
+    onClick={() => { 
+      setActiveNav('Profile'); 
+      setShowInventory(false); 
+      setShowPetCreation(false); 
+      setShowSettings(false); 
+    }}
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '20px',
+      background: '#2a2a2a',
+      padding: '5px',
+      borderRadius: '12px',
+      border: 'none',
+      width: '100%',
+      textAlign: 'left',
+      color: 'white',
+      cursor: 'pointer'
+    }}
+  >
+    <img src={profile.picture} alt="profile"
+      style={{ width: '60px', height: '60px', imageRendering: 'pixelated', marginRight: '10px' }} />
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <span>{profile.name}</span>
+      <small>{profile.npub}</small>
+    </div>
+  </button>
+)}
+
 
           <nav style={{ flexGrow: 1 }}>
             {['Games', 'Social'].map(nav => (
               <button type="button" key={nav} onClick={() => { setActiveNav(nav); setShowInventory(false); setShowPetCreation(false); setShowSettings(false); }}
                 style={{
                   width: '100%', margin: '5px 0',
-                  background: activeNav === nav ? '#2563eb' : '#3b82f6',
+                  background: activeNav === nav ? '#444' : '#2a2a2a',
                   border: 'none', color: 'white', padding: '8px'
                 }}>
                 {nav}
               </button>
             ))}
             <button type="button" onClick={() => { setShowInventory(true); setShowPetCreation(false); setShowSettings(false); }}
-              style={{ width: '100%', margin: '5px 0', background: '#10b981', border: 'none', color: 'white', padding: '8px' }}>
+              style={{ width: '100%', margin: '5px 0', background: '#2a2a2a', border: 'none', color: 'white', padding: '8px' }}>
               Inventory
             </button>
           </nav>
@@ -273,24 +302,30 @@ const euthanizePet = (index) => {
 </div>
 
 
-          <button type="button" aria-label="Collapse sidebar"
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            style={{
-              position: 'absolute',
-              right: sidebarCollapsed ? '-25px' : '-30px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '50%',
-              width: '30px',
-              height: '30px',
-              cursor: 'pointer',
-              zIndex: 10
-            }}>
-            ⮜
-          </button>
+<button type="button" aria-label="Collapse sidebar"
+  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+  style={{
+    position: 'absolute',
+    right: sidebarCollapsed ? '-25px' : '-30px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    background: 'rgba(50, 50, 50, 0.8)', // dark semi-transparent grey
+    color: 'white',
+    border: '2px solid rgba(255,255,255,0.2)', // optional subtle border
+    borderRadius: '6px', // small rounding for a square-like shape
+    width: '30px',
+    height: '30px',
+    cursor: 'pointer',
+    zIndex: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    fontSize: '16px'
+  }}>
+  ⮜
+</button>
+
         </div>
       );
 
@@ -351,10 +386,12 @@ const PetCreationForm = ({ onCreate }) => {
 
       const [showGames, setShowGames] = React.useState(false);
 const [showSocial, setShowSocial] = React.useState(false);
+const [showProfile, setShowProfile] = React.useState(false);
 
 React.useEffect(() => {
   setShowGames(activeNav === 'Games');
   setShowSocial(activeNav === 'Social');
+  setShowProfile(activeNav === 'Profile');
 }, [activeNav]);
 
 const MainContent = () => {
@@ -362,52 +399,73 @@ const MainContent = () => {
   if (showSettings) return <div><h2>Settings - Coming Soon!</h2></div>;
   if (showInventory) return <div><h2>Inventory - Coming Soon!</h2></div>;
 
-  if (activeNav === 'Graveyard') {
-    return (
-      <div>
-        <h2>Pet Graveyard</h2>
-        {graveyard.length === 0 ? (
-          <p>No pets have died yet.</p>
-        ) : (
-          graveyard.map((pet, i) => {
+if (activeNav === 'Graveyard') {
+  return (
+    <div>
+      <h2>Pet Graveyard</h2>
+      {graveyard.length === 0 ? (
+        <p>No pets have died yet.</p>
+      ) : (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '20px',
+          maxHeight: '70vh',
+          overflowY: 'auto',
+          padding: '10px'
+        }}>
+          {graveyard.map((pet, i) => {
             const lifespanMs = (pet.diedAt - pet.createdAt);
             const days = Math.floor(lifespanMs / (1000 * 60 * 60 * 24));
             const hours = Math.floor((lifespanMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((lifespanMs % (1000 * 60 * 60)) / (1000 * 60));
 
             return (
-              <div key={i} style={{ marginBottom: '20px', textAlign: 'center' }}>
+              <div key={i} style={{
+                background: 'rgba(55, 55, 55, 0.8)',
+                borderRadius: '12px',
+                padding: '15px',
+                textAlign: 'center',
+                boxShadow: '0 0 10px rgba(100, 100, 100, 0.5)'
+              }}>
                 <img 
                   src={PET_SPECIES[pet.species][Math.max(0, pet.stage - 1)]} 
                   alt={pet.species} 
-                  style={{ width: '100px', imageRendering: 'pixelated' }}
+                  style={{ width: '100px', imageRendering: 'pixelated', marginBottom: '10px' }}
                 />
                 <h3>{pet.name}</h3>
                 <p>Species: {pet.species}</p>
                 <p>Lifespan: {days}d {hours}h {minutes}m</p>
               </div>
             );
-          })
-        )}
-      </div>
-    );
-  }
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <div style={{ display: showGames ? 'block' : 'none', height: '80vh' }}>
+      <div style={{ display: showGames ? 'block' : 'none', height: '90vh' }}>
         <iframe src="games.html" title="Games" style={{ border: "none", width: "100%", height: "100%" }} />
       </div>
       <div style={{ display: showSocial ? 'block' : 'none', height: '80vh' }}>
         <iframe src="social.html" title="Social" style={{ border: "none", width: "100%", height: "100%" }} />
       </div>
 
+      <div style={{ display: showProfile ? 'block' : 'none', height: '95vh' }}>
+  <iframe src="profile.html" title="Profile" style={{ border: "none", width: "100%", height: "100%" }} />
+</div>
+
+
 {!(showGames || showSocial) && (
   activePet ? (
     <div 
       style={{
-        maxWidth: "400px",
+        maxWidth: "500px",
         margin: "20px auto",
         padding: "20px",
         border: "3px solid #3b82f6",
@@ -420,49 +478,70 @@ const MainContent = () => {
       <img 
         src={PET_SPECIES[activePet.species][activePet.stage - 1]} 
         alt={activePet.species}
-        style={{ width: '150px', imageRendering: 'pixelated' }} 
+        style={{ width: '150px', imageRendering: 'pixelated', marginBottom: '15px' }} 
       />
-      <p>Species: {activePet.species}</p>
-      <p>Gender: {activePet.gender}</p>
-      <p>Age: {Math.floor((Date.now() - activePet.createdAt) / (1000 * 60 * 60 * 24))} days</p>
-      <p>Stage: {activePet.stage}</p>
-      <p>Health: {Math.round(activePet.health)}</p>
-      <p>Hunger: {Math.round(activePet.hunger)}</p>
-{activePet.dead ? (
-  <p style={{ color: 'red' }}>Dead</p>
-) : (
-  <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-    <button
-      type="button"
-      onClick={() => feedPet(activePetIndex)}
-      style={{
-        background: "#10b981",
-        color: "white",
-        padding: "5px",
-        border: "none",
-      }}
-    >
-      Feed
-    </button>
 
-    <button
-      type="button"
-      onClick={() => euthanizePet(activePetIndex)}
-      style={{
-        background: "#ef4444",
-        color: "white",
-        padding: "5px",
-        border: "none",
-      }}
-    >
-      Euthanize
-    </button>
-  </div>
-)}
+      {/* Stats grid */}
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "15px", textAlign: "left" }}>
+        {/* Left column */}
+        <div style={{ flex: 1, marginRight: "10px" }}>
+          <p><strong>Species:</strong> {activePet.species}</p>
+          <p><strong>Gender:</strong> {activePet.gender}</p>
+          <p><strong>Age:</strong> {Math.floor((Date.now() - activePet.createdAt) / (1000 * 60 * 60 * 24))} days</p>
+          <p><strong>Health:</strong> {Math.round(activePet.health)}</p>
+          <p><strong>Hunger:</strong> {Math.round(activePet.hunger)}</p>
+        </div>
 
+        {/* Right column */}
+        <div style={{ flex: 1, marginLeft: "10px" }}>
+          <p><strong>Mood:</strong> ???</p>
+          <p><strong>Strength:</strong> ???</p>
+          <p><strong>Endurance:</strong> ???</p>
+          <p><strong>Agility:</strong> ???</p>
+          <p><strong>Luck:</strong> ???</p>
+        </div>
+      </div>
+
+      {/* Action buttons */}
+      {activePet.dead ? (
+        <p style={{ color: 'red' }}>Dead</p>
+      ) : (
+        <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+          <button
+            type="button"
+            onClick={() => feedPet(activePetIndex)}
+            style={{
+              background: "#10b981",
+              color: "white",
+              padding: "5px 10px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer"
+            }}
+          >
+            Feed
+          </button>
+
+          <button
+            type="button"
+            onClick={() => euthanizePet(activePetIndex)}
+            style={{
+              background: "#ef4444",
+              color: "white",
+              padding: "5px 10px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer"
+            }}
+          >
+            Euthanize
+          </button>
+        </div>
+      )}
     </div>
   ) : <p>No active pet selected.</p>
 )}
+
 
     </div>
   );
