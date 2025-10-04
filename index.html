@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pixel Pets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: monospace;
+      background: #93c5fd;
+    }
+  </style>
+  <!-- React & Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- Load main app -->
+  <script type="text/babel" src="./data/constants.js"></script>
+  <script type="text/babel" src="./components/Sidebar.js"></script>
+  <script type="text/babel" src="./components/PetCreationForm.js"></script>
+  <script type="text/babel" src="./components/MainContent.js"></script>
+  <script type="text/babel" src="./app.js"></script>
+</body>
+</html>
