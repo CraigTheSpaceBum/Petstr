@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Games Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', monospace;
+      background: #1e293b00;
+      color: #fff;
+    }
+    header {
+      padding: 10px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      color: #93c5fd;
+    }
+    #search-bar {
+      width: 80%;
+      padding: 8px;
+      font-family: inherit;
+      margin: 15px auto;
+      display: block;
+      border: 2px solid #2563eb;
+      border-radius: 8px;
+      font-size: 12px;
+      background: #f1f5f9;
+      color: #000;
+    }
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      justify-content: center;
+    }
+    .category {
+      flex: 1 1 40%;
+      background: #334155;
+      border-radius: 12px;
+      padding: 15px;
+    }
+    .category h2 {
+      font-size: 14px;
+      margin-top: 0;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 5px;
+    }
+    .game {
+      background: #475569;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    .game:hover {
+      background: #2563eb;
+      transform: scale(1.05);
+    }
+    .battledome {
+      background: linear-gradient(135deg, #ff0000, #ff9900, #ff00ff);
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
+      border: 3px solid #fff;
+      animation: glow 1.5s infinite alternate;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 5px #ff0000, 0 0 10px #ff9900; }
+      to   { box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff0000; }
+    }
+    #game-viewer {
+      margin: 20px;
+      padding: 20px;
+      background: #0f172a;
+      border: 3px solid #2563eb;
+      border-radius: 12px;
+      min-height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎮</h1>
+    <input type="text" id="search-bar" placeholder="Search for a game...">
+  </header>
+
+  <main>
+    <div class="categories">
+      <!-- Single Player -->
+      <div class="category">
+        <h2>Single Player</h2>
+        <div class="game" data-file="tic-tac-toe.html">Tic Tac Toe</div>
+        <div class="game" data-file="snakes-ladders.html">Snakes and Ladders</div>
+      </div>
+
+      <!-- Multiplayer -->
+      <div class="category">
+        <h2>Multiplayer</h2>
+        <div class="game" data-file="checkers.html">Checkers</div>
+        <div class="game battledome" data-file="battledome.html">⚔️ Battledome ⚔️</div>
+      </div>
+    </div>
+
+    <section id="game-viewer">
+      <p>Select a game to play...</p>
+    </section>
+  </main>
+
+  <script>
+    const searchBar = document.getElementById('search-bar');
+    const games = document.querySelectorAll('.game');
+    const viewer = document.getElementById('game-viewer');
+
+    // Search filter
+    searchBar.addEventListener('input', () => {
+      const query = searchBar.value.toLowerCase();
+      games.forEach(game => {
+        game.style.display = game.textContent.toLowerCase().includes(query) ? 'block' : 'none';
+      });
+    });
+
+    // Load game HTML into viewer
+    games.forEach(game => {
+      game.addEventListener('click', () => {
+        const file = game.getAttribute('data-file');
+        fetch(file)
+          .then(res => res.text())
+          .then(html => {
+            viewer.innerHTML = html;
+          })
+          .catch(() => {
+            viewer.innerHTML = "<p style='color:red'>Error loading game.</p>";
+          });
+      });
+    });
+  </script>
+</body>
+</html>
+
