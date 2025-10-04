@@ -7,10 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
-      margin: 0;
-      font-family: ,monospace;
-      background: #93c5fd;
-    }
+  margin: 0;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: #f1f1f1;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
   </style>
   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -135,7 +138,6 @@ const createPet = (name, species, gender) => {
           color: 'white',
           display: 'flex',
           flexDirection: 'column',
-          fontFamily: 'Press Start 2P, monospace',
           padding: '10px',
           height: '100vh',
           transition: 'width 0.3s ease-in-out',
@@ -410,8 +412,7 @@ const MainContent = () => {
       return (
         <div style={{
           display: 'flex',
-          fontFamily: 'Press Start 2P, monospace',
-          background: '#93c5fd',
+          background: '',
           minHeight: '100vh'
         }}>
           {!pubkey ? (
@@ -438,4 +439,3 @@ const MainContent = () => {
   </script>
 </body>
 </html>
-
