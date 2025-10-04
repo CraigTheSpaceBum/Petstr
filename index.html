@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -267,8 +266,30 @@
         if (showPetCreation) return <PetCreationForm onCreate={createPet} />;
         if (showSettings) return <div><h2>Settings - Coming Soon!</h2></div>;
         if (showInventory) return <div><h2>Inventory - Coming Soon!</h2></div>;
-        if (activeNav === 'Games') return <div><h2>Games - Coming Soon!</h2></div>;
-        if (activeNav === 'Social') return <div><h2>Social - Coming Soon!</h2></div>;
+        if (activeNav === 'Games') {
+  return (
+    <div style={{ height: '100%', width: '100%' }}>
+      <iframe 
+        src="games.html" 
+        title="Games" 
+        style={{ border: "none", width: "100%", height: "80vh" }}
+      />
+    </div>
+  );
+}
+
+if (activeNav === 'Social') {
+  return (
+    <div style={{ height: '100%', width: '100%' }}>
+      <iframe 
+        src="social.html" 
+        title="Social" 
+        style={{ border: "none", width: "100%", height: "80vh" }}
+      />
+    </div>
+  );
+}
+
 
         return activePet ? (
           <div>
