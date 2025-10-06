@@ -9,16 +9,57 @@
       margin: 0;
       font-family: 'Press Start 2P', monospace;
       color: #fff;
+      background: #0f172a;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    header {
+    /* Layout: main game area + right sidebar */
+    #container {
+      display: flex;
+      flex: 1;
+      height: 100%;
+    }
+
+    #game-viewer {
+      flex-grow: 1;
+      margin: 0;
+      padding: 20px;
+      background: #0f172a;
+      border-right: 3px solid #a855f7;
+      overflow-y: auto;
+    }
+
+    /* Sidebar */
+    #sidebar {
+      width: 300px;
+      background: rgba(31, 41, 55, 0.95);
+      border-left: 3px solid #a855f7;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.3s ease;
+    }
+
+    #sidebar.collapsed {
+      width: 50px;
+    }
+
+    /* Collapse button */
+    #collapse-btn {
+      background: #1e293b;
+      color: #fff;
+      border: none;
       padding: 10px;
+      cursor: pointer;
       text-align: center;
+      font-size: 14px;
     }
 
     h1 {
-      margin: 0;
-      font-size: 20px;
+      margin: 10px;
+      font-size: 16px;
+      text-align: center;
       color: #c084fc;
       text-shadow: 0 0 10px #c084fc;
     }
@@ -27,7 +68,7 @@
       width: 80%;
       padding: 8px;
       font-family: inherit;
-      margin: 15px auto;
+      margin: 10px auto;
       display: block;
       border: 2px solid #a855f7;
       border-radius: 8px;
@@ -37,26 +78,15 @@
     }
 
     .categories {
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .category {
-      flex: 1 1 80%;
-      background: rgba(31, 41, 55, 0.85);
-      border-radius: 12px;
-      padding: 20px;
-      border: 2px solid #a855f7;
-      box-shadow: 0 0 10px #a855f7;
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
     }
 
     .category h2 {
-      font-size: 14px;
-      margin-top: 0;
-      margin-bottom: 15px;
+      font-size: 12px;
+      margin: 10px 0;
       border-bottom: 2px solid #c084fc;
-      padding-bottom: 5px;
       text-align: center;
       color: #c084fc;
       text-shadow: 0 0 8px #c084fc;
@@ -70,6 +100,7 @@
       cursor: pointer;
       transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
       text-align: center;
+      font-size: 12px;
     }
 
     .game:hover {
@@ -91,44 +122,43 @@
       to   { box-shadow: 0 0 20px #7c3aed, 0 0 40px #c084fc; }
     }
 
-    #game-viewer {
-      margin: 20px auto;
-      padding: 20px;
-      background: #0f172a;
-      border: 3px solid #a855f7;
-      border-radius: 12px;
-      min-height: 300px;
-      width: 80%;
-      box-shadow: 0 0 15px #a855f7;
+    /* Hide text when collapsed */
+    #sidebar.collapsed h1,
+    #sidebar.collapsed #search-bar,
+    #sidebar.collapsed .categories {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🎮 Games Hub</h1>
-    <input type="text" id="search-bar" placeholder="Search for a game...">
-  </header>
-
-  <main>
-    <div class="categories">
-      <div class="category">
-        <h2>Games List</h2>
-        <div class="game" data-file="tic-tac-toe.html">Tic Tac Toe</div>
-        <div class="game" data-file="snakes-ladders.html">Snakes and Ladders</div>
-        <div class="game" data-file="checkers.html">Checkers</div>
-        <div class="game battledome" data-file="battledome.html">⚔️ Battledome ⚔️</div>
-      </div>
-    </div>
-
+  <div id="container">
     <section id="game-viewer">
       <p>Select a game to play...</p>
     </section>
-  </main>
+
+    <aside id="sidebar">
+      <button id="collapse-btn">⮜</button>
+      <h1>🎮 Games Hub</h1>
+      <input type="text" id="search-bar" placeholder="Search for a game...">
+
+      <div class="categories">
+        <div class="category">
+          <h2>Games List</h2>
+          <div class="game" data-file="tic-tac-toe.html">Tic Tac Toe</div>
+          <div class="game" data-file="snakes-ladders.html">Snakes and Ladders</div>
+          <div class="game" data-file="checkers.html">Checkers</div>
+          <div class="game battledome" data-file="battledome.html">⚔️ Battledome ⚔️</div>
+        </div>
+      </div>
+    </aside>
+  </div>
 
   <script>
     const searchBar = document.getElementById('search-bar');
     const games = document.querySelectorAll('.game');
     const viewer = document.getElementById('game-viewer');
+    const sidebar = document.getElementById('sidebar');
+    const collapseBtn = document.getElementById('collapse-btn');
 
     // Search filter
     searchBar.addEventListener('input', () => {
@@ -138,7 +168,7 @@
       });
     });
 
-    // Load game HTML into viewer
+    // Load game into viewer
     games.forEach(game => {
       game.addEventListener('click', () => {
         const file = game.getAttribute('data-file');
@@ -152,6 +182,13 @@
           });
       });
     });
+
+    // Collapse sidebar
+    collapseBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      collapseBtn.textContent = sidebar.classList.contains('collapsed') ? '⮞' : '⮜';
+    });
   </script>
 </body>
 </html>
+

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pixel Pets Social</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', monospace;
+      background: transparent; /* Uses index.html background */
+      color: #fff;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 3px solid #9333ea;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #9333ea, inset 0 0 20px #4c1d95;
+    }
+    h1 {
+      text-align: center;
+      color: #c084fc;
+      text-shadow: 0 0 5px #a855f7, 0 0 10px #9333ea;
+    }
+    .friends {
+      margin-top: 20px;
+    }
+    .friend {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0f172a;
+      border: 2px solid #4c1d95;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .friend:hover {
+      background: #312e81;
+    }
+    .status {
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+    .online {
+      background: #16a34a;
+      color: #fff;
+    }
+    .offline {
+      background: #991b1b;
+      color: #fff;
+    }
+    .friend-actions button {
+      background: #1e1b4b;
+      border: 1px solid #9333ea;
+      color: #fff;
+      font-size: 10px;
+      margin-left: 5px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .friend-actions button:hover {
+      background: #9333ea;
+    }
+    .feed {
+      margin-top: 20px;
+    }
+    .post {
+      display: flex;
+      gap: 15px;
+      background: #0f172a;
+      border: 2px solid #4c1d95;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      padding: 10px;
+      align-items: center;
+    }
+    .profile-pic {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #334155;
+      position: relative;
+    }
+    .verified::after {
+      content: "";
+      position: absolute;
+      top: -5px; left: -5px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      box-shadow: 0 0 15px 5px #9333ea;
+    }
+    .post-details {
+      flex: 1;
+    }
+    .username {
+      font-size: 12px;
+      color: #c084fc;
+    }
+    .npub {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+    .post-content {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #e0e7ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pixel Pets Social</h1>
+
+    <!-- Friend List -->
+    <div id="list" class="friends">
+      <div class="friend" onclick="showFriendFeed('Eve')">
+        <span>Eve</span>
+        <div>
+          <span class="status online">Online</span>
+          <div class="friend-actions">
+            <button>Message</button><button>Pet Details</button><button>Remove</button>
+          </div>
+        </div>
+      </div>
+      <div class="friend" onclick="showFriendFeed('Frank')">
+        <span>Frank</span>
+        <div>
+          <span class="status offline">Offline</span>
+          <div class="friend-actions">
+            <button>Message</button><button>Pet Details</button><button>Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Friend Feed -->
+    <div id="friendFeed" class="feed" style="display:none;"></div>
+  </div>
+
+  <script>
+    function showFriendFeed(name) {
+      const feed = document.getElementById('friendFeed');
+      feed.innerHTML = `
+        <div class="post">
+          <div class="profile-pic verified" style="background:url('https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}') center/cover;"></div>
+          <div class="post-details">
+            <div class="username">${name}</div>
+            <div class="npub">npub1${name.toLowerCase()}...</div>
+            <div class="post-content">${name}'s personal posts only. 🚀</div>
+          </div>
+        </div>`;
+      document.getElementById('list').style.display = 'none';
+      feed.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

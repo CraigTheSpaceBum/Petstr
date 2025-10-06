@@ -23,13 +23,13 @@
   <div id="root"></div>
   <script type="text/babel">
     const PET_SPECIES = {
-     Dog: ['https://craigthespacebum.github.io/Petstr/Monsters/003.png'],
-     Cat: ['https://craigthespacebum.github.io/Petstr/Monsters/002.png'],
-     Bird: ['https://craigthespacebum.github.io/Petstr/Monsters/001.png'],
-     Rat: ['https://craigthespacebum.github.io/Petstr/Monsters/004.png'],
-     Corn: ['https://craigthespacebum.github.io/Petstr/Monsters/005.png'],
-     Bug: ['https://craigthespacebum.github.io/Petstr/Monsters/006.png'],
-     Lizard: ['https://craigthespacebum.github.io/Petstr/Monsters/007.png'],
+     Dog: ['Monsters/003.png'],
+     Cat: ['Monsters/002.png'],
+     Bird: ['Monsters/001.png'],
+     Rat: ['Monsters/004.png'],
+     Corn: ['Monsters/005.png'],
+     Bug: ['Monsters/006.png'],
+     Lizard: ['Monsters/007.png'],
     };
 
     const hungerDecayRate = 1;
@@ -154,22 +154,23 @@ const euthanizePet = (index) => {
       const activePet = pets[activePetIndex] ? updatePetStatus({ ...pets[activePetIndex] }) : null;
 // SideBar Color
       const Sidebar = () => (
-        <div style={{
-          width: sidebarCollapsed ? '50px' : '250px',
-          background: '#1f1f1f',
-          color: 'white',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '10px',
-          height: '100vh',
-          transition: 'width 0.3s ease-in-out',
-          position: 'relative'
-        }}>
+ <div style={{
+  width: sidebarCollapsed ? '50px' : '250px',
+  background: '#1f1f1f',
+  color: 'white',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '10px',
+        // fills window height
+  transition: 'width 0.3s ease-in-out',
+  position: 'relative'
+}}>
+
 
 {!sidebarCollapsed && (
   <div style={{ textAlign: 'center', marginBottom: '20px' }}>
     <img 
-      src="https://craigthespacebum.github.io/Petstr/assets/logo.png" 
+      src="assets/logo.png" 
       alt="Pets Transmitted by Relays" 
       style={{ width: '100%', maxWidth: '200px', imageRendering: 'pixelated' }}
     />
@@ -247,7 +248,7 @@ const euthanizePet = (index) => {
 
 
           <nav style={{ flexGrow: 1 }}>
-            {['Games', 'Social'].map(nav => (
+           {['Games', 'Social', 'Friends'].map(nav => (
               <button type="button" key={nav} onClick={() => { setActiveNav(nav); setShowInventory(false); setShowPetCreation(false); setShowSettings(false); }}
                 style={{
                   width: '100%', margin: '5px 0',
@@ -384,14 +385,16 @@ const PetCreationForm = ({ onCreate }) => {
 };
 
 
-      const [showGames, setShowGames] = React.useState(false);
+const [showGames, setShowGames] = React.useState(false);
 const [showSocial, setShowSocial] = React.useState(false);
 const [showProfile, setShowProfile] = React.useState(false);
+const [showFriends, setShowFriends] = React.useState(false);
 
 React.useEffect(() => {
   setShowGames(activeNav === 'Games');
   setShowSocial(activeNav === 'Social');
   setShowProfile(activeNav === 'Profile');
+  setShowFriends(activeNav === 'Friends');
 }, [activeNav]);
 
 const MainContent = () => {
@@ -433,6 +436,7 @@ if (activeNav === 'Graveyard') {
                   alt={pet.species} 
                   style={{ width: '100px', imageRendering: 'pixelated', marginBottom: '10px' }}
                 />
+                <h3>R.I.P.</h3>
                 <h3>{pet.name}</h3>
                 <p>Species: {pet.species}</p>
                 <p>Lifespan: {days}d {hours}h {minutes}m</p>
@@ -448,75 +452,117 @@ if (activeNav === 'Graveyard') {
 
 
   return (
-    <div style={{ height: '100%', width: '100%' }}>
-      <div style={{ display: showGames ? 'block' : 'none', height: '90vh' }}>
-        <iframe src="games.html" title="Games" style={{ border: "none", width: "100%", height: "100%" }} />
-      </div>
-      <div style={{ display: showSocial ? 'block' : 'none', height: '80vh' }}>
-        <iframe src="social.html" title="Social" style={{ border: "none", width: "100%", height: "100%" }} />
-      </div>
 
-      <div style={{ display: showProfile ? 'block' : 'none', height: '95vh' }}>
-  <iframe src="profile.html" title="Profile" style={{ border: "none", width: "100%", height: "100%" }} />
+    <div style={{ height: '100%', width: '100%' }}>
+      <div style={{ display: showGames ? 'block' : 'none', width: '100%', height: '100%' }}>
+  <iframe src="games.html" title="Games"
+    style={{ border: "none", width: "100%", height: "100%", display: "block" }} />
+</div>
+
+<div style={{ display: showSocial ? 'block' : 'none', width: '100%', height: '100%' }}>
+  <iframe src="social.html" title="Social"
+    style={{ border: "none", width: "100%", height: "100%", display: "block" }} />
+</div>
+
+<div style={{ display: showFriends ? 'block' : 'none', width: '100%', height: '100%' }}>
+  <iframe src="friends.html" title="Friends"
+    style={{ border: "none", width: "100%", height: "100%", display: "block" }} />
+</div>
+
+<div style={{ display: showProfile ? 'block' : 'none', width: '100%', height: '100%' }}>
+  <iframe src="profile.html" title="Profile"
+    style={{ border: "none", width: "100%", height: "100%", display: "block" }} />
 </div>
 
 
-{!(showGames || showSocial) && (
-  activePet ? (
-    <div 
-      style={{
-        maxWidth: "500px",
-        margin: "20px auto",
-        padding: "20px",
-        border: "3px solid #3b82f6",
-        borderRadius: "12px",
-        background: "rgba(20, 50, 107, 0.8)",
-        textAlign: "center",
-      }}
-    >
-      <h2>{activePet.name}</h2>
+{activeNav === "Home" && activePet && (
+  <div 
+    style={{
+      maxWidth: "600px",
+      margin: "40px auto",
+      padding: "30px",
+      border: "3px solid #9333ea", // main outer border
+      borderRadius: "16px",
+      background: "#1f1f1f",
+      textAlign: "center",
+      display: "flex",
+      flexDirection: "column",
+      gap: "25px",
+    }}
+  >
+    {/* Name box */}
+    <div style={{
+      borderRadius: "10px",
+      padding: "15px",
+      background: "#2a2a2a",
+      boxShadow: "2px 2px 10px rgba(0,0,0,0.7)",
+    }}>
+      <h2 style={{ color: "#c084fc", margin: "0", fontSize: "2em" }}>{activePet.name}</h2>
+    </div>
+
+    {/* Pet image */}
+    <div>
       <img 
         src={PET_SPECIES[activePet.species][activePet.stage - 1]} 
         alt={activePet.species}
-        style={{ width: '150px', imageRendering: 'pixelated', marginBottom: '15px' }} 
+        style={{ width: '200px', imageRendering: 'pixelated', borderRadius: "10px" }} 
       />
+    </div>
 
-      {/* Stats grid */}
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "15px", textAlign: "left" }}>
-        {/* Left column */}
-        <div style={{ flex: 1, marginRight: "10px" }}>
-          <p><strong>Species:</strong> {activePet.species}</p>
-          <p><strong>Gender:</strong> {activePet.gender}</p>
-          <p><strong>Age:</strong> {Math.floor((Date.now() - activePet.createdAt) / (1000 * 60 * 60 * 24))} days</p>
-          <p><strong>Health:</strong> {Math.round(activePet.health)}</p>
-          <p><strong>Hunger:</strong> {Math.round(activePet.hunger)}</p>
+    {/* Stats panel */}
+    <div style={{
+      borderRadius: "16px",
+      background: "#1a1a1a",
+      padding: "20px",
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "15px",
+    }}>
+      {/* Individual stats */}
+      {[
+        { label: "Happiness", value: "???" },
+        { label: "Species", value: activePet.species },
+        { label: "Gender", value: activePet.gender },
+        { label: "Age", value: `${Math.floor((Date.now() - activePet.createdAt) / (1000*60*60*24))} days` },
+        { label: "Health", value: Math.round(activePet.health) },
+        { label: "Hunger", value: Math.round(activePet.hunger) },
+        { label: "Strength", value: "???" },
+        { label: "Endurance", value: "???" },
+        { label: "Agility", value: "???" },
+        { label: "Luck", value: "???" },
+      ].map((stat, idx) => (
+        <div key={idx} style={{
+          borderRadius: "8px",
+          padding: "12px",
+          background: "#2a2a2a",
+          boxShadow: "2px 2px 12px rgba(0,0,0,0.6)",
+          textAlign: "center",
+          fontSize: "1em",
+        }}>
+          <strong style={{ color: "#c084fc" }}>{stat.label}:</strong> <span>{stat.value}</span>
         </div>
+      ))}
+    </div>
 
-        {/* Right column */}
-        <div style={{ flex: 1, marginLeft: "10px" }}>
-          <p><strong>Mood:</strong> ???</p>
-          <p><strong>Strength:</strong> ???</p>
-          <p><strong>Endurance:</strong> ???</p>
-          <p><strong>Agility:</strong> ???</p>
-          <p><strong>Luck:</strong> ???</p>
-        </div>
-      </div>
-
-      {/* Action buttons */}
+    {/* Action buttons */}
+    <div style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
       {activePet.dead ? (
-        <p style={{ color: 'red' }}>Dead</p>
+        <p style={{ color: '#ef4444', fontWeight: 'bold', fontSize: "1.2em" }}>This pet has passed away.</p>
       ) : (
-        <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+        <>
           <button
             type="button"
             onClick={() => feedPet(activePetIndex)}
             style={{
-              background: "#10b981",
-              color: "white",
-              padding: "5px 10px",
+              background: "#6b21a8",
+              color: "#fff",
+              padding: "12px 20px",
               border: "none",
-              borderRadius: "5px",
-              cursor: "pointer"
+              borderRadius: "10px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "1em",
+              boxShadow: "2px 2px 8px rgba(0,0,0,0.7)"
             }}
           >
             Feed
@@ -527,53 +573,61 @@ if (activeNav === 'Graveyard') {
             onClick={() => euthanizePet(activePetIndex)}
             style={{
               background: "#ef4444",
-              color: "white",
-              padding: "5px 10px",
+              color: "#fff",
+              padding: "12px 20px",
               border: "none",
-              borderRadius: "5px",
-              cursor: "pointer"
+              borderRadius: "10px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "1em",
+              boxShadow: "2px 2px 8px rgba(0,0,0,0.7)"
             }}
           >
             Euthanize
           </button>
-        </div>
+        </>
       )}
     </div>
-  ) : <p>No active pet selected.</p>
+  </div>
 )}
+
+
+
+
+
 
 
     </div>
   );
 };
-      return (
-        <div style={{
-          display: 'flex',
-          background: '',
-          minHeight: '100vh'
-        }}>
-          {!pubkey ? (
-            <div style={{ margin: 'auto', textAlign: 'center' }}>
-              <h1>Pixel Pets</h1>
-              <button type="button" onClick={testLogin}
-                style={{ margin: '10px', background: '#10b981', color: 'white', padding: '10px' }}>
-                Test Login
-              </button>
-            </div>
-          ) : (
-            <>
-              <Sidebar />
-              <div style={{ flexGrow: 1, padding: '20px' }}>
-                <MainContent />
-              </div>
-            </>
-          )}
+return (
+  <div style={{
+    display: 'flex',
+    minHeight: '100vh'
+  }}>
+    {!pubkey ? (
+      <div style={{ margin: 'auto', textAlign: 'center' }}>
+        <h1>Pixel Pets</h1>
+        <button type="button" onClick={testLogin}
+          style={{ margin: '10px', background: '#10b981', color: 'white', padding: '10px' }}>
+          Test Login
+        </button>
+      </div>
+    ) : (
+      <>
+        <Sidebar />
+        <div style={{ flexGrow: 1, height: '100vh', overflow: 'hidden' }}>
+          <MainContent />
         </div>
-      );
+      </>
+    )}
+  </div>
+);
+
+
     }
 
     ReactDOM.createRoot(document.getElementById('root')).render(<TamagotchiApp />);
   </script>
 </body>
 </html>
-

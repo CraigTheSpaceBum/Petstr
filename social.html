@@ -8,7 +8,7 @@
     body {
       margin: 0;
       font-family: 'Press Start 2P', monospace;
-      background: transparent; /* Uses index.html background */
+      background: transparent;
       color: #fff;
     }
     .container {
@@ -28,7 +28,8 @@
     .menu {
       display: flex;
       justify-content: center;
-      gap: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
       margin: 20px 0;
     }
     .menu button {
@@ -36,15 +37,16 @@
       color: #fff;
       border: 2px solid #9333ea;
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 6px 10px;
       cursor: pointer;
       transition: all 0.3s;
+      font-size: 10px;
     }
     .menu button:hover {
       background: #9333ea;
       transform: scale(1.05);
     }
-    .feed, .friends {
+    .feed {
       margin-top: 20px;
     }
     .post {
@@ -55,7 +57,8 @@
       border-radius: 8px;
       margin-bottom: 15px;
       padding: 10px;
-      align-items: center;
+      align-items: flex-start;
+      flex-direction: row;
     }
     .profile-pic {
       width: 50px;
@@ -63,6 +66,7 @@
       border-radius: 50%;
       background: #334155;
       position: relative;
+      flex-shrink: 0;
     }
     .verified::after {
       content: "";
@@ -72,63 +76,55 @@
       border-radius: 50%;
       box-shadow: 0 0 15px 5px #9333ea;
     }
-    .post-details {
-      flex: 1;
-    }
-    .username {
-      font-size: 12px;
-      color: #c084fc;
-    }
-    .npub {
-      font-size: 10px;
-      color: #94a3b8;
-    }
-    .post-content {
-      margin-top: 5px;
-      font-size: 12px;
-      color: #e0e7ff;
-    }
-    /* Friend list */
-    .friend {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #0f172a;
-      border: 2px solid #4c1d95;
-      border-radius: 8px;
-      padding: 8px;
-      margin-bottom: 8px;
-      cursor: pointer;
-    }
-    .friend:hover {
-      background: #312e81;
-    }
-    .status {
-      font-size: 10px;
-      padding: 2px 5px;
-      border-radius: 4px;
-    }
-    .online {
-      background: #16a34a;
-      color: #fff;
-    }
-    .offline {
-      background: #991b1b;
-      color: #fff;
-    }
-    .friend-actions button {
-      background: #1e1b4b;
-      border: 1px solid #9333ea;
-      color: #fff;
-      font-size: 10px;
-      margin-left: 5px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .friend-actions button:hover {
-      background: #9333ea;
-    }
-  </style>
+    .post-details { flex: 1; display: flex; flex-direction: column; }
+    .username { font-size: 12px; color: #c084fc; }
+    .npub { font-size: 10px; color: #94a3b8; }
+    .post-content { margin-top: 10px; font-size: 12px; color: #e0e7ff; }
+    .post-actions { margin-top:10px; display:flex; gap:8px; font-size:11px; flex-wrap: wrap; }
+    .post-actions button { cursor: pointer; border: none; padding: 2px 6px; border-radius: 4px; background:#1e1b4b; color:#fff; border:1px solid #9333ea; font-size: 10px; }
+    .post-actions button:hover { background: #9333ea; }
+    .reply-input { display:flex; gap:5px; margin-top:5px; }
+    .reply-input input { flex:1; padding:4px; border-radius:4px; border:1px solid #9333ea; background:#1e1b4b; color:#fff; font-size:11px; }
+.reply {
+  background:#1e1b4b;
+  border:1px solid #9333ea;
+  padding:6px 8px;
+  border-radius:6px;
+  font-size:11px;
+  margin-top:8px;
+  display:block; /* changed from flex */
+}
+
+.reply .reply-header {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:4px;
+}
+
+.reply .reply-pic {
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:#334155;
+  flex-shrink:0;
+}
+
+.reply .reply-name {
+  font-weight:bold;
+  color:#c084fc;
+  font-size:11px;
+}
+
+.reply-content {
+  font-size:11px;
+  margin-left:30px; /* aligns content under name/pic */
+}
+
+.nested-reply {
+  margin-left:40px; /* indent nested replies */
+}
+</style>
 </head>
 <body>
   <div class="container">
@@ -136,93 +132,161 @@
     <div class="menu">
       <button onclick="showSection('global')">Global Feed</button>
       <button onclick="showSection('follow')">Follow Feed</button>
-      <button onclick="showSection('friends')">Friend Feed</button>
-      <button onclick="showSection('list')">Friend List</button>
+      <button onclick="showSection('friends')">Friends Feed</button>
+      <button onclick="showSection('customFeed')">Custom Feed</button>
     </div>
 
-    <div id="global" class="feed" style="display:none;">
-      <div class="post">
+    <!-- Global feed -->
+    <div id="global" class="feed">
+      <div class="post" id="post-global-1">
         <div class="profile-pic verified" style="background:url('https://bitcoin-cats.ca/Craigverse.webp') center/cover;"></div>
         <div class="post-details">
           <div class="username">CraigTheSpaceBum</div>
           <div class="npub">npub1Bum123...</div>
           <div class="post-content">I can't believe it's not butter</div>
-        </div>
-      </div>
-      <div class="post">
-        <div class="profile-pic" style="background:url('https://api.dicebear.com/7.x/pixel-art/svg?seed=bob') center/cover;"></div>
-        <div class="post-details">
-          <div class="username">Bob</div>
-          <div class="npub">npub1bob456...</div>
-          <div class="post-content">Check out my new pet dragon 🐉🔥</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="follow" class="feed" style="display:none;">
-      <div class="post">
-        <div class="profile-pic verified" style="background:url('https://api.dicebear.com/7.x/pixel-art/svg?seed=charlie') center/cover;"></div>
-        <div class="post-details">
-          <div class="username">Charlie</div>
-          <div class="npub">npub1charlie999...</div>
-          <div class="post-content">Tamagotchi vibes are back! 🕹️</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="friends" class="feed" style="display:none;">
-      <div class="post">
-        <div class="profile-pic" style="background:url('https://api.dicebear.com/7.x/pixel-art/svg?seed=daisy') center/cover;"></div>
-        <div class="post-details">
-          <div class="username">Daisy</div>
-          <div class="npub">npub1daisy321...</div>
-          <div class="post-content">Hanging out with my pet cat 😺</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="list" class="friends" style="display:none;">
-      <div class="friend" onclick="showFriendFeed('Eve')">
-        <span>Eve</span>
-        <div>
-          <span class="status online">Online</span>
-          <div class="friend-actions">
-            <button>Message</button><button>Pet Details</button><button>Remove</button>
+          <div class="post-actions">
+            <button onclick="likePost('post-global-1')">👍 Like <span id="likes-post-global-1">0</span></button>
+            <button onclick="sharePost('post-global-1')">🔗 Share</button>
+            <button onclick="zapPost('post-global-1')">⚡ Zap <span id="zaps-post-global-1">0</span></button>
+            <button onclick="toggleReplies('post-global-1')">💬 Replies</button>
           </div>
-        </div>
-      </div>
-      <div class="friend" onclick="showFriendFeed('Frank')">
-        <span>Frank</span>
-        <div>
-          <span class="status offline">Offline</span>
-          <div class="friend-actions">
-            <button>Message</button><button>Pet Details</button><button>Remove</button>
+          <div class="reply-input" id="reply-input-post-global-1" style="display:none;">
+            <input type="text" id="reply-text-post-global-1" placeholder="Write a reply...">
+            <button onclick="addReply('post-global-1')">Reply</button>
+          </div>
+          <div id="replies-post-global-1"></div>
         </div>
       </div>
     </div>
 
-    <div id="friendFeed" class="feed" style="display:none;"></div>
+    <!-- Custom feed -->
+    <div id="customFeed" class="feed" style="display:none;">
+      <div id="customManager">
+        <input type="text" id="npubInput" placeholder="Enter npub...">
+        <button onclick="addNpub()">Add</button>
+        <div id="npubList"></div>
+      </div>
+      <h3>Custom Feed Posts</h3>
+      <div id="customPosts"></div>
+    </div>
+
   </div>
 
   <script>
+    let customNpubs = [];
+    const postStats = {};
+
     function showSection(id) {
-      document.querySelectorAll('.feed, .friends').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.feed').forEach(el => el.style.display = 'none');
       document.getElementById(id).style.display = 'block';
+      if (id === 'customFeed') renderCustomFeed();
     }
 
-    function showFriendFeed(name) {
-      const feed = document.getElementById('friendFeed');
-      feed.innerHTML = `
-        <div class="post">
-          <div class="profile-pic verified" style="background:url('https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}') center/cover;"></div>
-          <div class="post-details">
-            <div class="username">${name}</div>
-            <div class="npub">npub1${name.toLowerCase()}...</div>
-            <div class="post-content">${name}'s personal posts only. 🚀</div>
+    function addNpub() {
+      const npub = document.getElementById('npubInput').value.trim();
+      if (!npub || customNpubs.includes(npub)) return;
+      customNpubs.push(npub);
+      document.getElementById('npubInput').value = '';
+      renderCustomFeed();
+    }
+
+    function removeNpub(npub) {
+      customNpubs = customNpubs.filter(n => n !== npub);
+      renderCustomFeed();
+    }
+
+    function renderCustomFeed() {
+      const listDiv = document.getElementById('npubList');
+      listDiv.innerHTML = '';
+      customNpubs.forEach(npub => {
+        const item = document.createElement('div');
+        item.className = 'npub-item';
+        item.innerHTML = `<span>${npub}</span><button onclick="removeNpub('${npub}')">Remove</button>`;
+        listDiv.appendChild(item);
+      });
+
+      const postsDiv = document.getElementById('customPosts');
+      postsDiv.innerHTML = '';
+      customNpubs.forEach((npub, idx) => {
+        const postId = `post-custom-${idx}`;
+        postStats[postId] = { likes: 0, zaps: 0, replies: [] };
+        postsDiv.innerHTML += `
+          <div class="post" id="${postId}">
+            <div class="profile-pic verified" style="background:url('https://api.dicebear.com/7.x/pixel-art/svg?seed=${npub}') center/cover;"></div>
+            <div class="post-details">
+              <div class="username">${npub.slice(0,8)}...</div>
+              <div class="npub">${npub}</div>
+              <div class="post-content">Post from ${npub} 🎉</div>
+              <div class="post-actions">
+                <button onclick="likePost('${postId}')">👍 Like <span id="likes-${postId}">0</span></button>
+                <button onclick="sharePost('${postId}')">🔗 Share</button>
+                <button onclick="zapPost('${postId}')">⚡ Zap <span id="zaps-${postId}">0</span></button>
+                <button onclick="toggleReplies('${postId}')">💬 Replies</button>
+              </div>
+              <div class="reply-input" id="reply-input-${postId}" style="display:none;">
+                <input type="text" id="reply-text-${postId}" placeholder="Write a reply...">
+                <button onclick="addReply('${postId}')">Reply</button>
+              </div>
+              <div id="replies-${postId}"></div>
+            </div>
           </div>
-        </div>`;
-      document.querySelectorAll('.feed, .friends').forEach(el => el.style.display = 'none');
-      feed.style.display = 'block';
+        `;
+      });
+    }
+
+    function likePost(id) {
+      if (!postStats[id]) postStats[id] = { likes: 0, zaps: 0, replies: [] };
+      postStats[id].likes++;
+      document.getElementById(`likes-${id}`).innerText = postStats[id].likes;
+    }
+
+    function zapPost(id) {
+      if (!postStats[id]) postStats[id] = { likes: 0, zaps: 0, replies: [] };
+      postStats[id].zaps++;
+      document.getElementById(`zaps-${id}`).innerText = postStats[id].zaps;
+    }
+
+    function sharePost(id) {
+      const post = document.getElementById(id);
+      navigator.clipboard.writeText(post.querySelector('.post-content').innerText)
+        .then(() => alert('Post content copied!'));
+    }
+
+    function toggleReplies(id) {
+      const inputDiv = document.getElementById(`reply-input-${id}`);
+      inputDiv.style.display = inputDiv.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    function addReply(id, parentReply=null) {
+      const textInput = parentReply ? document.getElementById(`reply-text-${id}-${parentReply}`) : document.getElementById(`reply-text-${id}`);
+      const text = textInput.value.trim();
+      if (!text) return;
+
+      const repliesDiv = parentReply ? document.getElementById(`nested-replies-${id}-${parentReply}`) : document.getElementById(`replies-${id}`);
+      const replyId = Math.random().toString(36).substring(2, 9);
+
+      const div = document.createElement('div');
+      div.className = parentReply ? 'reply nested-reply' : 'reply';
+      div.id = `reply-${replyId}`;
+div.innerHTML = `<div class="reply-header">
+                    <div class="reply-pic" style="background:url('https://api.dicebear.com/7.x/pixel-art/svg?seed=TestUser') center/cover;"></div>
+                    <span class="reply-name">Test User</span>
+                  </div>
+                  <div class="reply-content">${text}</div>
+                  <button style="font-size:10px; margin-left:30px; margin-top:2px;" onclick="showNestedReplyInput('${id}','${replyId}')">Reply</button>
+                  <div id="nested-replies-${id}-${replyId}"></div>
+                  <div class="reply-input" id="reply-input-${id}-${replyId}" style="display:none; margin-top:3px; margin-left:30px;">
+                    <input type="text" id="reply-text-${id}-${replyId}" placeholder="Write a reply...">
+                    <button onclick="addReply('${id}','${replyId}')">Reply</button>
+                  </div>`;
+
+      repliesDiv.appendChild(div);
+      textInput.value = '';
+    }
+
+    function showNestedReplyInput(postId, replyId) {
+      const inputDiv = document.getElementById(`reply-input-${postId}-${replyId}`);
+      inputDiv.style.display = inputDiv.style.display === 'none' ? 'flex' : 'none';
     }
   </script>
 </body>
